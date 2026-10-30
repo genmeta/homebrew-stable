@@ -1,40 +1,33 @@
 class Pishoo < Formula
   desc "modern, secure, QUIC-powered web/proxy engine"
-  version "0.8.2"
+  version "0.9.0"
   homepage "https://www.dhttp.net"
   license "Apache-2.0"
 
   on_arm do
-    url "https://download.dhttp.net/homebrew/stable/pishoo_0.8.2-aarch64-apple-darwin.tar.gz"
-    sha256 "154ca205107a26e1b6f4b8f48185566796310e0203f2fe84393553b74ead4bff"
+    url "https://download.dhttp.net/homebrew/stable/pishoo_0.9.0-aarch64-apple-darwin.tar.gz"
+    sha256 "e5f9fd353c16f425b671c663a6c76767e4de90aed0042de861177127cfaa760e"
   end
 
   on_intel do
-    url "https://download.dhttp.net/homebrew/stable/pishoo_0.8.2-x86_64-apple-darwin.tar.gz"
-    sha256 "cc8ce46e86cd2bea446344547271da20f6d2efe7695a0ad43b2ed0eaf62c921e"
+    url "https://download.dhttp.net/homebrew/stable/pishoo_0.9.0-x86_64-apple-darwin.tar.gz"
+    sha256 "dc72b5063c9867e6cd6990a74c1f4c86a4af71051e4139bbb994b1000b4e1d9d"
   end
 
   def install
     bin.install "pishoo"
-    libexec.install "pishoo-worker"
-    libexec.install "pishoo-ssh-session"
-
-
-    (etc/"dhttp").mkpath
-    chmod 0755, etc/"dhttp"
-    etc.install "pishoo.conf" => "dhttp/pishoo.conf" unless File.exist? "#{etc}/dhttp/pishoo.conf"
-    etc.install "mime.types"  => "dhttp/mime.types"  unless File.exist? "#{etc}/dhttp/mime.types"
   end
 
   def caveats
     <<~EOS
-      Configuration files are installed at:
-        #{etc}/dhttp/pishoo.conf
-
-      On macOS, default global-home mode loads worker users from the existing _www group.
-      This formula does not create or modify system groups. To opt the current user into
-      default pishoo worker discovery, run:
-        sudo dseditgroup -o edit -a "$USER" -t user _www
+      Run Pishoo as the user who owns ~/.dhttp.
+      Identity directories and current databases are initialized at first startup.
+      Existing data is preserved; unsupported legacy databases stop startup with a diagnostic.
+      To run as the current user, use: brew services start pishoo
+      To install Workspace after configuring an identity and starting Pishoo:
+        brew install gmutils
+        genmeta install workspace --id YOUR_IDENTITY
+      Run genmeta as the account that owns the identity. App dependencies install automatically.
     EOS
   end
 
@@ -47,6 +40,6 @@ class Pishoo < Formula
   end
 
   test do
-    system "#{bin}/pishoo", "-V"
+    assert_predicate bin/"pishoo", :executable?
   end
 end
