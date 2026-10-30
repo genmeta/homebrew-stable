@@ -1,25 +1,25 @@
 class Gmutils < Formula
   desc "Genmeta Binary Utilities"
-  version "0.8.2"
+  version "0.9.0"
   homepage "https://www.dhttp.net"
   license "Apache-2.0"
 
   on_arm do
-    url "https://download.dhttp.net/homebrew/stable/gmutils-0.8.2-aarch64-apple-darwin.tar.gz"
-    sha256 "0d7d74d24d76be6e79c46a4489937a0ba0a0373ee77dce531b37e00ad9009011"
+    url "https://download.dhttp.net/homebrew/stable/gmutils-0.9.0-aarch64-apple-darwin.tar.gz"
+    sha256 "5f110e412890db01b5f2db0d6ca113cc32b9c990e57b81fb7456f7a3cedb90f9"
   end
 
   on_intel do
-    url "https://download.dhttp.net/homebrew/stable/gmutils-0.8.2-x86_64-apple-darwin.tar.gz"
-    sha256 "779b85a6205c1d53b98f675932fe272b0c26d3cddc522f1ad5865d3282a26568"
+    url "https://download.dhttp.net/homebrew/stable/gmutils-0.9.0-x86_64-apple-darwin.tar.gz"
+    sha256 "c4b9dc9418b712057ea8083c8ca00b3608c55b3f8f0272be67a496ef0a067678"
   end
 
   def install
-    bin.install "genmeta"
-    bin.install "genmeta-ssh.sh"
+    bin.install "genmeta", "jade"
   end
 
   test do
     system "#{bin}/genmeta", "version"
+    system "#{bin}/jade", "--version"
   end
 end
